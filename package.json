@@ -1,0 +1,20 @@
+{
+  "name": "html-generator",
+  "version": "1.0.0",
+  "description": "Generate an html page from the command-line responses in the application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sirmaaalik/HTML-Generator.git"
+  },
+  "author": "Malik Harris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sirmaaalik/HTML-Generator/issues"
+  },
+  "homepage": "https://github.com/Sirmaaalik/HTML-Generator#readme"
+}
