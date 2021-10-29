@@ -75,55 +75,6 @@ const questions = [
             }
         }
     },
-
-    {
-        type: 'input',
-        name: 'test',
-        message: 'Test instructions',
-        validate: testInput => {
-            if(testInput) {
-                return true;
-            } else {
-                console.log('Please input testing instructions:')
-                return false;
-            }
-        }
-    },
-
-    {
-        type: 'list',
-        name: 'license',
-        message: '',
-        choices: ['GNU GPLv3', 'Apache', 'Apache 2.0', 'MIT', 'ISC', 'none']
-    },
-
-    {
-        type: 'input',
-        name: 'github',
-        message: 'Please enter your Github username',
-        validate: githubInput => {
-            if(githubInput) {
-                return true;
-            } else {
-                console.log('Please type your Github username:')
-                return false;
-            }
-        }
-    },
-
-    {
-        type: 'input',
-        name: 'email',
-        message: 'Enter your email address:',
-        validate: emailInput => {
-            if(emailInput) {
-                return true;
-            } else {
-                console.log('Please type your email address correctly:')
-                return false;
-            }
-        }
-    },
 ];
 
 // TODO: Create a function to write README file 
