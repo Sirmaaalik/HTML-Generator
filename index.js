@@ -1,95 +1,141 @@
-// Edit all of this for project 10: not done
-const fs = require('fs');
-const inquirer = require('inquirer');
-const server = require('./assets/server');
+//Edit all of this for project 10: not done
+const inquirer = require("inquirer");
+const fs = require("fs");
 
-// Array of questions for manager
-const questions = [
-    /* Pass your questions in here */
-    {
-        type: 'input',
-        name: 'Name',
-        message: 'Manager name: ',
-        validate: projectInput => {
-            if(projectInput) {
-                return true;
-            } else {
-                console.log("Please input the manager's name: ")
-                return false;
-            }
-        }
-    },
+//Team Profiles
+const Manager = require("./lib/Manager.js");
+const Engineer = require("./lib/Engineer.js");
+const Intern = require("./lib/Intern.js");
+const { mainModule } = require("process");
+const path = require("path");
 
-    {
-        type: 'input',
-        name: 'ID',
-        message: 'Manager ID: ',
-        validate: descriptionInput => {
-            if(descriptionInput) {
-                return true;
-            } else {
-                console.log("Please input the manager ID: ")
-                return false;
-            }
-        }
-    },
+const generatePage = require("./src/templateHelper");
 
-    {
-        type: 'input',
-        name: 'Email',
-        message: 'Manager email address: ',
-        validate: installInput => {
-            if(installInput) {
-                return true;
-            } else {
-                console.log('Please input installing instructions:')
-                return false;
-            }
-        }
-    },
+//Team Array
+const teamArray = [];
 
-    {
-        type: 'input',
-        name: 'Number',
-        message: 'Manager office number: ',
-        validate: usageInput => {
-            if(usageInput) {
-                return true;
-            } else {
-                console.log('Please input usage information:')
-                return false;
-            }
-        }
-    },
+const DIR = path.resolve(__dirname, "output");
+const PATH = path.join(DIR, "team.html");
 
-    {
-        type: 'input',
-        name: 'contributing',
-        message: 'Contribution Guidelines',
-        validate: contributeInput => {
-            if(contributeInput) {
-                return true;
-            } else {
-                console.log('Please input contribution guidelines:')
-                return false;
-            }
-        }
-    },
-];
-
-// TODO: Create a function to write README file 
-const writeToFile = data => {
-    return new Promise((resolve, reject) => {
-        fs.writeFile('./dist/README.md', data, err => {
-        if (err) {
-            reject(err);
-            return;
-        }
-    
-        resolve({
-            ok: true,
-            message: 'File created!'
-        });
-        });
+//Manager Input
+const addManager = () => {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "The name of the manager",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("please enter the manager's name");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please enter the manager's id.",
+        validate: (nameInput) => {
+          if (isNaN(nameInput)) {
+            console.log("Please enter the manager's ID");
+            return false;
+          } else {
+            return true;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please enter the manager's email",
+      },
+      {
+        type: "input",
+        name: "officeNumber",
+        message: "Please enter the manager's office number",
+      },
+    ])
+    .then((managerInput) => {
+      const { name, id, email, officeNumber } = managerInput;
+      const manager = new Manager(name, id, email, officeNumber);
+      teamArray.push(manager);
+      console.log(manager);
+      addEmployee();
     });
 };
+
+//Adding  employees to the team
+const addEmployee = () => {
+  console.log("adding employees to the team");
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "Please choose your employee's role",
+        choices: ["Engineer", "Intern"],
+      },
+      {
+        type: "input",
+        name: "name",
+        message: "What's the name of the employee?",
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Please enter the employee's ID.",
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please enter employee's email.",
+      },
+      {
+        type: "input",
+        name: "github",
+        message: "Please enter the employee's github username.",
+        when: (input) => input.role === "Engineer",
+      },
+      {
+        type: "input",
+        name: "school",
+        message: "Please enter the intern's school.",
+        when: (input) => input.role === "Intern",
+      },
+      {
+        type: "confirm",
+        name: "confirmAddEmployee",
+        message: "Would you like to add more team members?",
+      },
+    ])
+
+    .then((employeeData) => {
+      //data for employee types
+      let { name, id, email, role, github, school, confirmAddEmployee } = employeeData;
+      let employee;
+      if (role === "Engineer") {
+        employee = new Engineer(name, id, email, github);
+        console.log(employee);
+      } else if (role === "Intern") {
+        employee = new Intern(name, id, email, school);
+        console.log(employee);
+      }
+      teamArray.push(employee);
+      if (confirmAddEmployee) {
+        addEmployee();
+      } else {
+        console.log(teamArray);        
+        generatePage(teamArray);
+      }
+    });
+};
+
+//function to initialize app
+function init() {
+  addManager();
+}
+
+init();
