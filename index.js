@@ -9,7 +9,7 @@ const Intern = require("./lib/Intern.js");
 const { mainModule } = require("process");
 const path = require("path");
 
-const generatePage = require("./src/templateHelper");
+const generatePage = require("./src/server");
 
 //Team Array
 const teamArray = [];
